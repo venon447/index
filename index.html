@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy New Year, Twin!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #4B0082, #FF1493, #000);
+            font-family: 'Roboto', Arial, sans-serif;
+            color: #FFF;
+            text-align: center;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            transition: background 0.5s;
+        }
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(45deg, rgba(255,20,147,0.1), rgba(75,0,130,0.1) 10px, rgba(0,0,0,0.1) 10px, rgba(0,0,0,0.1) 20px);
+            pointer-events: none;
+            z-index: -1;
+        }
+        .page {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .page.active {
+            display: flex;
+            opacity: 1;
+        }
+        h1 {
+            font-size: 3.5em;
+            font-weight: 400;
+            font-family: 'Great Vibes', cursive;
+            color: #FF1493;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 10px #FF1493;
+            animation: fadeGlow 3s infinite alternate;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            z-index: 2;
+        }
+        @keyframes fadeGlow {
+            0% { text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 10px #FF1493; }
+            100% { text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 20px #FF1493, 0 0 30px #4B0082; }
+        }
+        .gift {
+            font-size: 4em;
+            cursor: pointer;
+            animation: subtleBounce 2s infinite;
+            margin-top: 30px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease, filter 0.3s;
+            z-index: 2;
+        }
+        .gift:hover {
+            transform: scale(1.1);
+            filter: blur(1px);
+        }
+        @keyframes subtleBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .notes-container {
+            max-height: 70vh;
+            overflow-y: auto; /* Keeps scrolling, but scrollbar is hidden below */
+            width: 90%;
+            max-width: 600px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6), 0 0 20px rgba(255,20,147,0.3);
+            border: 3px solid #FF1493;
+            backdrop-filter: blur(15px);
+            z-index: 2;
+            /* Hide scrollbar */
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE/Edge */
+        }
+        .notes-container::-webkit-scrollbar { /* Webkit browsers (Chrome, Safari) */
+            display: none;
+        }
+        .note {
+            background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,20,147,0.2));
+            border: 2px solid #4B0082;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transform: rotate(-1deg);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        .note:nth-child(even) { transform: rotate(1deg); }
+        .note:hover { transform: rotate(0deg) scale(1.02); }
+        .note textarea {
+            width: 100%;
+            height: 100px;
+            border: none;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 1em;
+            font-family: 'Roboto', Arial, sans-serif;
+            background: rgba(255, 255, 255, 0.8);
+            color: #000;
+            outline: none;
+            resize: vertical;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .note textarea::placeholder { color: rgba(0,0,0,0.6); }
+        .add-note {
+            font-size: 2em;
+            cursor: pointer;
+            margin: 10px 0;
+            animation: pulseArrow 2s infinite;
+            color: #FF1493;
+            transition: color 0.3s;
+        }
+        .add-note:hover { color: #4B0082; }
+        @keyframes pulseArrow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        button {
+            margin: 15px 10px 0;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            font-weight: 400;
+            font-family: 'Roboto', Arial, sans-serif;
+            background: linear-gradient(45deg, #4B0082, #FF1493);
+            color: #FFF;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+        }
+        .back-btn {
+            background: linear-gradient(45deg, #000, #4B0082);
+        }
+        .decorations {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .heart {
+            position: absolute;
+            font-size: 1.5em;
+            color: #FF1493;
+            animation: floatHearts 10s infinite linear;
+            opacity: 0.7;
+        }
+        .heart:nth-child(odd) { animation-delay: 2s; }
+        .heart:nth-child(3n) { animation-delay: 4s; }
+        @keyframes floatHearts {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+        .sparkle {
+            position: absolute;
+            font-size: 1em;
+            color: #FFF;
+            animation: sparkleFade 4s infinite;
+        }
+        @keyframes sparkleFade {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Home Page -->
+    <div id="home" class="page active">
+        <div class="decorations">
+            <div class="heart" style="left: 10%; animation-duration: 8s;">💖</div>
+            <div class="heart" style="left: 30%; animation-duration: 9s;">💖</div>
+            <div class="heart" style="left: 50%; animation-duration: 10s;">💖</div>
+            <div class="heart" style="left: 70%; animation-duration: 11s;">💖</div>
+            <div class="heart" style="left: 90%; animation-duration: 12s;">💖</div>
+            <div class="sparkle" style="top: 20%; left: 20%; animation-delay: 1s;">✨</div>
+            <div class="sparkle" style="top: 40%; left: 40%; animation-delay: 2s;">✨</div>
+            <div class="sparkle" style="top: 60%; left: 60%; animation-delay: 3s;">✨</div>
+            <div class="sparkle" style="top: 80%; left: 80%; animation-delay: 4s;">✨</div>
+        </div>
+        <h1>Happy New Year!!My Tuff Twinn!!</h1>
+        <div class="gift" onclick="showPage('essay')">🎁</div>
+    </div>
+
+    <!-- Essay Page -->
+    <div id="essay" class="page">
+        <div class="decorations">
+            <div class="heart" style="left: 15%; animation-duration: 7s;">💖</div>
+            <div class="heart" style="left: 35%; animation-duration: 8s;">💖</div>
+            <div class="heart" style="left: 55%; animation-duration: 9s;">💖</div>
+            <div class="heart" style="left: 75%; animation-duration: 10s;">💖</div>
+            <div class="sparkle" style="top: 25%; left: 25%; animation-delay: 0.5s;">✨</div>
+            <div class="sparkle" style="top: 45%; left: 45%; animation-delay: 1.5s;">✨</div>
+            <div class="sparkle" style="top: 65%; left: 65%; animation-delay: 2.5s;">✨</div>
+        </div>
+        <h1>Your New Year Gift! (I cant afford a real gift rn😭) 🎁✨</h1>
+        <div class="notes-container" id="notesContainer">
+            <div class="note">
+                <textarea placeholder="Write your first paragraph here, Twinn! 💖"></textarea>
+            </div>
+            <div class="add-note" onclick="addNote()">➡️ Add Another Note</div>
+        </div>
+        <button onclick="saveAllNotes()">Save All Notes! 💾</button>
+        <button class="back-btn" onclick="showPage('home')">Back to Home 🏠</button>
+    </div>
+
+    <script>
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
+        function addNote() {
+            const container = document.getElementById('notesContainer');
+            const newNote = document.createElement('div');
+            newNote.className = 'note';
+            newNote.innerHTML = '<textarea placeholder="Write the next paragraph here! 📝"></textarea>';
+            container.insertBefore(newNote, container.lastElementChild);
+        }
+        function saveAllNotes() {
+            const notes = document.querySelectorAll('#notesContainer .note textarea');
+            let essay = '';
+            notes.forEach(note => {
+                if (note.value.trim()) {
+                    essay += note.value.trim() + '\n\n';
+                }
+            });
+            if (essay.trim() === '') {
+                alert('Oops! Write something in the notes first, Twinn! 📝');
+            } else {
+                localStorage.setItem('newYearEssay', essay.trim());
+                alert('All notes saved as your essay! 🎉 You can come back to edit anytime.');
+            }
+        }
+        // Load saved essay on page load and split into notes
+        window.onload = () => {
+            const saved = localStorage.getItem('newYearEssay');
+            if (saved) {
+                const paragraphs = saved.split('\n\n');
+                const container = document.getElementById('notesContainer');
+                container.innerHTML = ''; // Clear initial note
+                paragraphs.forEach(para => {
+                    if (para.trim()) {
+                        const note = document.createElement('div');
+                        note.className = 'note';
+                        note.innerHTML = `<textarea>${para}</textarea>`;
+                        container.appendChild(note);
+                    }
+                });
+                const addBtn = document.createElement('div');
+                addBtn.className = 'add-note';
+                addBtn.onclick = addNote;
+                addBtn.textContent = '➡️ Add Another Note';
+                container.appendChild(addBtn);
+            }
+        };
+    </script>
+</body>
+</html>
